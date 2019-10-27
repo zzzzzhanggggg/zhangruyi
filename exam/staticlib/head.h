@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <syslog.h>
+#include <string.h>
+#include <stdlib.h>
+
+void menu_1();
+void menu1_1();
+void menu2_1();
+void createFile1_1();
+void writeFile1_1();
+void readFile1_1();
+void updateMode1_1();
+void createFile2_1();
+void writeFile2_1();
+void readFile2_1();
+void updateMode2_1();
+void func1();
+void func2();
+void func();
