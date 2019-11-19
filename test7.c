@@ -1,34 +1,48 @@
-#include "my.h"
+#include"my.h"
 int main()
 {
-	pid_t pid1,pid2;
 	FILE *fp;
-	fp=fopen("out.dat","w+");
-	pid1=fork();
-	pid2=fork();	
-	if(pid1<0||pid2<0)
+	int pid1,pid2,status1,status2;
+	if((fp=fopen("out.dat","w+")) == NULL)
 	{
-		perror("fork error!");
+		printf("Create failed!\n");
+		exit(1);
 	}
-	else if(pid1=0)
+	
+	else if((pid1=fork())&&(pid2=fork()) < 0)
 	{
-		sleep(2);
-        fwrite("pid1:0123456789",1,strlen("pid1:0123456789"),fp);
-		exit(0);
+		perror("fork failed!\n");
 	}
-	else if(pid2=0)
+	else if(pid1 == 0)
 	{
-		sleep(2);
-        fwrite("pid2:0123456789",1,strlen("pid2:0123456789"),fp);
-		exit(0);
+		printf("%d: child1 running\n",getpid());
+		fwrite("123456789",strlen("123456789"),1,fp);
+		exit(120);
+	}
+	else if(pid2 == 0)
+	{
+		printf("%d: child2 running\n",getpid());
+		fwrite("123456789",strlen("123456789"),1,fp);
+		exit(130);
 	}
 	else
 	{
-		int status=0;
-		wait(&status);
-		if(WIFEXITED(status))
+		printf("%d:parent is exiting now\n",getpid());
+		printf("%d:parent is waiting zombie now\n",getpid());
+		wait(&status2);
+		if(WEXITSTATUS(status2))
 		{
-            printf("child process return %d\n",WEXITSTATUS(status));
-        }
+			printf("child2 %d is exiting normally.exit code=%d\n",pid2,WEXITSTATUS(status2));
+		}
+		wait(&status1);
+		if(WEXITSTATUS(status1))
+		{
+			printf("child1 %d is exiting normally.exit code=%d\n",pid1,WEXITSTATUS(status1));
+		}
+
+		printf("parent finished!\n");
 	}
+	fclose(fp);
+	return 0;
 }
+

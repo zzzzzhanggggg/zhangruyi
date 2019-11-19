@@ -32,7 +32,7 @@ int main()
 		exit(0);
 	if((pid=fork())==0)
 		abort(0);
-	if((pid-fork())==0)
+	if((pid=fork())==0)
 	{
 		status/=zero;
 		exit(0);
